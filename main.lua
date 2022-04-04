@@ -175,6 +175,7 @@ menu.keys = (function()
     for key in pairs(config) do
         table.insert(keys, key)
     end
+    table.sort(keys)
     return keys
 end)()
 
