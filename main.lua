@@ -150,15 +150,24 @@ end
 local menu = Menu:new { selected = 1 }
 
 menu.keybindings = {
+    -- bindings
     { key = 't', fn = menu:with_update { transitions.toggle } },
     { key = 's', fn = save_config },
+    { key = 'ESC', fn = function() menu:close() end },
+    -- vim keys
     { key = 'k', fn = menu:with_update { function() menu:change_menu_item(-1) end } },
     { key = 'j', fn = menu:with_update { function() menu:change_menu_item(1) end } },
     { key = 'h', fn = menu:with_update { function() menu:change_selected_value(-0.1) end } },
     { key = 'l', fn = menu:with_update { function() menu:change_selected_value(0.1) end } },
     { key = 'shift+h', fn = menu:with_update { function() menu:change_selected_value(-0.5) end } },
     { key = 'shift+l', fn = menu:with_update { function() menu:change_selected_value(0.5) end } },
-    { key = 'ESC', fn = function() menu:close() end },
+    -- arrows
+    { key = 'up', fn = menu:with_update { function() menu:change_menu_item(-1) end } },
+    { key = 'down', fn = menu:with_update { function() menu:change_menu_item(1) end } },
+    { key = 'left', fn = menu:with_update { function() menu:change_selected_value(-0.1) end } },
+    { key = 'right', fn = menu:with_update { function() menu:change_selected_value(0.1) end } },
+    { key = 'shift+left', fn = menu:with_update { function() menu:change_selected_value(-0.5) end } },
+    { key = 'shift+right', fn = menu:with_update { function() menu:change_selected_value(0.5) end } },
 }
 
 menu.keys = (function()
