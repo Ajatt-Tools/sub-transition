@@ -221,11 +221,19 @@ function menu:make_osd()
     return osd
 end
 
-local function main()
-    mpopt.read_options(config, NAME)
-    mp.add_key_binding("shift+n", NAME .. '_menu_open', function() menu:open() end)
-    mp.unregister_event(main)
-end
+local main = (function()
+    local init_done = false
+    local function fn()
+        if not init_done then
+            mpopt.read_options(config, NAME)
+            mp.add_key_binding("shift+n", NAME .. '_menu_open', function() menu:open() end)
+            init_done = true
+        else
+            reset_transition()
+        end
+    end
+    return fn
+end)()
 
 --- Start
 
