@@ -68,7 +68,7 @@ local function get_delay_to_next_sub()
     return initial_sub_delay - next_sub_delay
 end
 
-local timer = {
+local timers = {
     start_transition = new_timer(),
     end_transition = new_timer(),
 }
@@ -88,6 +88,13 @@ local function end_transition()
     end
 end
 
+local function reset_transition()
+    for _, timer in pairs(timers) do
+        timer.cancel()
+    end
+    end_transition()
+end
+
 local function check_sub(_, sub)
     if is_empty(sub) then
         local current_pos = mp.get_property_native("time-pos")
@@ -96,14 +103,12 @@ local function check_sub(_, sub)
             local speedup_start = current_pos + config.start_delay
             local speedup_end = current_pos + delay_to_next_sub - config.reset_before
             if speedup_end - speedup_start >= config.min_duration then
-                timer.start_transition.set(speedup_start, start_transition)
-                timer.end_transition.set(speedup_end, end_transition)
+                timers.start_transition.set(speedup_start, start_transition)
+                timers.end_transition.set(speedup_end, end_transition)
             end
         end
     else
-        timer.start_transition.cancel()
-        timer.end_transition.cancel()
-        end_transition()
+        reset_transition()
     end
 end
 
@@ -115,9 +120,7 @@ local transitions = (function()
             mp.osd_message("Transitions enabled.")
         else
             mp.unobserve_property(check_sub)
-            timer.start_transition.cancel()
-            timer.end_transition.cancel()
-            end_transition()
+            reset_transition()
             mp.osd_message("Transitions disabled.")
         end
         enabled = not enabled
