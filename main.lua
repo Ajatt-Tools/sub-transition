@@ -11,7 +11,7 @@ local com = require('common')
 local msg = require('mp.msg')
 local OSD = require('osd_styler')
 local Menu = require('menu')
-local default_sync_property = mp.get_property("video-sync")
+local default_sync_property = mp.get_property("video-sync", "audio")
 
 local config = {
     start_delay = 0.1, -- if the next subtitle appears after this threshold then speedup
@@ -61,9 +61,9 @@ local function new_timer()
 end
 
 local function get_delay_to_next_sub()
-    local initial_sub_delay = mp.get_property_native("sub-delay")
+    local initial_sub_delay = mp.get_property_native("sub-delay") or 0
     mp.command("no-osd sub-step 1")
-    local next_sub_delay = mp.get_property_native("sub-delay")
+    local next_sub_delay = mp.get_property_native("sub-delay") or 0
     mp.set_property("sub-delay", initial_sub_delay)
     return initial_sub_delay - next_sub_delay
 end
@@ -92,7 +92,7 @@ local function check_sub(_, sub)
     if is_empty(sub) then
         local current_pos = mp.get_property_native("time-pos")
         local delay_to_next_sub = get_delay_to_next_sub()
-        if delay_to_next_sub then
+        if current_pos and delay_to_next_sub then
             local speedup_start = current_pos + config.start_delay
             local speedup_end = current_pos + delay_to_next_sub - config.reset_before
             if speedup_end - speedup_start >= config.min_duration then
