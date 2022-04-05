@@ -1,6 +1,6 @@
 --[[
 Copyright: Ren Tatsumoto
-License: GNU GPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
+License: GNU GPL, version 3 or later; https://www.gnu.org/licenses/gpl-3.0.html
 ]]
 
 local NAME = 'sub_transition'
