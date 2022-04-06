@@ -11,7 +11,7 @@ function OSD:new()
 end
 
 function OSD:append(s)
-    table.insert(self.messages, s)
+    table.insert(self.messages, tostring(s))
     return self
 end
 

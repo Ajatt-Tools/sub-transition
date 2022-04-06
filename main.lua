@@ -14,6 +14,7 @@ local Menu = require('menu')
 local default_sync_property = mp.get_property("video-sync", "audio")
 
 local config = {
+    start_enabled = false, -- enable transitions when mpv starts without having to enable them in the menu
     start_delay = 0.1, -- if the next subtitle appears after this threshold then speedup
     reset_before = 0.3, --seconds to stop short of the next subtitle
     min_duration = 0.4, -- minimum duration of a skip
@@ -134,6 +135,14 @@ local transitions = (function()
     }
 end)()
 
+local function lua_to_mpv(config_value)
+    if type(config_value) == 'boolean' then
+        return config_value and 'yes' or 'no'
+    else
+        return config_value
+    end
+end
+
 local function save_config()
     local mpv_dir_path = string.gsub(mp.get_script_directory(), "scripts/[^/]+$", "")
     local config_filepath = utils.join_path(mpv_dir_path, string.format('script-opts/%s.conf', NAME))
@@ -141,7 +150,7 @@ local function save_config()
     if handle ~= nil then
         handle:write(string.format("# Written by %s on %s.\n", NAME, os.date()))
         for key, value in pairs(config) do
-            handle:write(string.format('%s=%s\n', key, value))
+            handle:write(string.format('%s=%s\n', key, lua_to_mpv(value)))
         end
         handle:close()
         com.notify("Saved.", "info", 3)
@@ -192,9 +201,13 @@ function menu:change_menu_item(step)
 end
 
 function menu:change_selected_value(step)
-    config[self.keys[self.selected]] = config[self.keys[self.selected]] + step
-    if config[self.keys[self.selected]] < 0 then
-        config[self.keys[self.selected]] = 0
+    if type(config[self.keys[self.selected]]) == "boolean" then
+        config[self.keys[self.selected]] = not config[self.keys[self.selected]]
+    else
+        config[self.keys[self.selected]] = config[self.keys[self.selected]] + step
+        if config[self.keys[self.selected]] < 0 then
+            config[self.keys[self.selected]] = 0
+        end
     end
 end
 
@@ -227,6 +240,7 @@ local main = (function()
         if not init_done then
             mpopt.read_options(config, NAME)
             mp.add_key_binding("shift+n", NAME .. '_menu_open', function() menu:open() end)
+            if config.start_enabled then transitions.toggle() end
             init_done = true
         else
             reset_transition()
