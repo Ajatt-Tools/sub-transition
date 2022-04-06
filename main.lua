@@ -166,6 +166,7 @@ menu.keybindings = {
     { key = 't', fn = menu:with_update { transitions.toggle } },
     { key = 's', fn = save_config },
     { key = 'ESC', fn = function() menu:close() end },
+    { key = 'q', fn = function() menu:close() end },
     -- vim keys
     { key = 'k', fn = menu:with_update { function() menu:change_menu_item(-1) end } },
     { key = 'j', fn = menu:with_update { function() menu:change_menu_item(1) end } },
