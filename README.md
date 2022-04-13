@@ -22,6 +22,8 @@ To open the menu, press `shift+n`.
 
 ### Change settings
 
+Use Vim keys to navigate the menu.
+
 * `j` and `k` to move between entries.
 * `h` and `l` to change the values by `0.1`.
 * `shift+h` and `shift+l` to change the values by `0.5`.
