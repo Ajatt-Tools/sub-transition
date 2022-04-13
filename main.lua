@@ -11,10 +11,14 @@ local com = require('common')
 local OSD = require('osd_styler')
 local Menu = require('menu')
 local default_sync_property = mp.get_property("video-sync", "audio")
+local start_delay = 0.015
+local end_ahead = 0.05
 
 local config = {
     start_enabled = false, -- enable transitions when mpv starts without having to enable them in the menu
     notifications = true, -- enable notifications when speed changes
+    pause_on_start = false, -- pause when a subtitle starts
+    pause_before_end = false, -- pause before a subtitle ends
     start_delay = 0.1, -- if the next subtitle appears after this threshold then speedup
     reset_before = 0.3, --seconds to stop short of the next subtitle
     min_duration = 0.4, -- minimum duration of a skip
@@ -69,9 +73,14 @@ local function get_delay_to_next_sub()
     return initial_sub_delay - next_sub_delay
 end
 
+local function get_padded_sub_end()
+    return mp.get_property_number("sub-end", 0) + mp.get_property_number("sub-delay", 0) - mp.get_property_number("audio-delay", 0) - end_ahead
+end
+
 local timers = {
     start_transition = new_timer(),
     end_transition = new_timer(),
+    pause_on_end = new_timer(),
 }
 
 local function start_transition()
@@ -88,6 +97,11 @@ local function end_transition()
         mp.set_property("video-sync", default_sync_property)
     end
     com.notify { message = string.format("x%.1f", config.normal_speed), osd = config.notifications, }
+end
+
+local function pause_playback()
+    mp.set_property("pause", "yes")
+    com.notify { message = "Paused.", osd = config.notifications, }
 end
 
 local function reset_transition()
@@ -111,6 +125,14 @@ local function check_sub(_, sub)
         end
     else
         reset_transition()
+        local sub_end = get_padded_sub_end()
+        if config.pause_before_end and sub_end > 0 then
+            timers.pause_on_end.set(sub_end, pause_playback)
+        end
+        if config.pause_on_start and mp.get_property("pause") ~= "yes" then
+            pause_playback()
+            mp.commandv("seek", start_delay, "relative+exact")
+        end
     end
 end
 
