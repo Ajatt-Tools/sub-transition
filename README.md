@@ -37,6 +37,7 @@ You can also use arrow keys if your keyboard has them.
 ### Settings
 
 * `start enabled` - enable transitions when mpv starts
+* `notifications` - notify when speed changes
 * `start delay` - delay before speedup
 * `reset before` - seconds to stop short of the next subtitle
 * `min duration` - minimum duration of a transition

@@ -7,11 +7,14 @@ local mp = require('mp')
 local msg = require('mp.msg')
 local unpack = unpack and unpack or table.unpack
 
-local function notify(message, level, duration)
-    level = level or 'info'
-    duration = duration or 1
-    msg[level](message)
-    mp.osd_message(message, duration)
+local function notify(params)
+    local osd = params.osd or false
+    local level = params.level or 'info'
+    local duration = params.duration or 1
+    msg[level](params.message)
+    if osd then
+        mp.osd_message(params.message, duration)
+    end
 end
 
 return {

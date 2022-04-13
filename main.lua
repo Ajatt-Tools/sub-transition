@@ -8,13 +8,13 @@ local mpopt = require('mp.options')
 local mp = require('mp')
 local utils = require('mp.utils')
 local com = require('common')
-local msg = require('mp.msg')
 local OSD = require('osd_styler')
 local Menu = require('menu')
 local default_sync_property = mp.get_property("video-sync", "audio")
 
 local config = {
     start_enabled = false, -- enable transitions when mpv starts without having to enable them in the menu
+    notifications = true, -- enable notifications when speed changes
     start_delay = 0.1, -- if the next subtitle appears after this threshold then speedup
     reset_before = 0.3, --seconds to stop short of the next subtitle
     min_duration = 0.4, -- minimum duration of a skip
@@ -79,7 +79,7 @@ local function start_transition()
     if mp.get_property_native("video-sync") == default_sync_property then
         mp.set_property("video-sync", "desync")
     end
-    msg['info'](string.format("Changed speed to %f", config.inter_speed))
+    com.notify { message = string.format("x%.1f", config.inter_speed), osd = config.notifications, }
 end
 
 local function end_transition()
@@ -87,6 +87,7 @@ local function end_transition()
     if mp.get_property_native("video-sync") == "desync" then
         mp.set_property("video-sync", default_sync_property)
     end
+    com.notify { message = string.format("x%.1f", config.normal_speed), osd = config.notifications, }
 end
 
 local function reset_transition()
@@ -118,11 +119,11 @@ local transitions = (function()
     local function toggle()
         if not enabled then
             mp.observe_property("sub-text", "string", check_sub)
-            mp.osd_message("Transitions enabled.")
+            com.notify { message = "Transitions enabled.", osd = config.notifications, }
         else
             mp.unobserve_property(check_sub)
             reset_transition()
-            mp.osd_message("Transitions disabled.")
+            com.notify { message = "Transitions disabled.", osd = config.notifications, }
         end
         enabled = not enabled
     end
@@ -153,9 +154,9 @@ local function save_config()
             handle:write(string.format('%s=%s\n', key, lua_to_mpv(value)))
         end
         handle:close()
-        com.notify("Saved.", "info", 3)
+        com.notify { message = "Saved.", duration = 3, osd = true, }
     else
-        com.notify(string.format("Couldn't open %s.", config_filepath), "error", 5)
+        com.notify { message = string.format("Couldn't open %s.", config_filepath), level = "error", duration = 5, osd = true, }
     end
 end
 
