@@ -11,7 +11,6 @@ local com = require('common')
 local OSD = require('osd_styler')
 local Menu = require('menu')
 local default_sync_property = mp.get_property("video-sync", "audio")
-local start_delay = 0.015
 local end_ahead = 0.05
 
 local config = {
@@ -131,7 +130,7 @@ local function check_sub(_, sub)
         end
         if config.pause_on_start and mp.get_property("pause") ~= "yes" then
             pause_playback()
-            mp.commandv("seek", start_delay, "relative+exact")
+            mp.commandv("frame-step")
         end
     end
 end
