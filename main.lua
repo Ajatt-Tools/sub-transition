@@ -67,10 +67,13 @@ local function new_timer()
 end
 
 local function get_delay_to_next_sub()
+    local initial_sub_visibility = mp.get_property_bool("sub-visibility")
     local initial_sub_delay = mp.get_property_native("sub-delay") or 0
-    mp.command("no-osd sub-step 1")
+    mp.set_property_bool("sub-visibility", false)
+    mp.commandv("no-osd", "sub-step", 1)
     local next_sub_delay = mp.get_property_native("sub-delay") or 0
-    mp.set_property("sub-delay", initial_sub_delay)
+    mp.set_property_number("sub-delay", initial_sub_delay)
+    mp.set_property_bool("sub-visibility", initial_sub_visibility)
     return initial_sub_delay - next_sub_delay
 end
 
