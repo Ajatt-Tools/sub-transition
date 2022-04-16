@@ -14,6 +14,7 @@ local default_sync_property = mp.get_property("video-sync", "audio")
 local default_readahead_secs = mp.get_property_number("demuxer-readahead-secs", 0)
 local recommended_readahead_secs = 120
 local end_ahead = 0.05
+local revisit_delay = 0.15
 
 local config = {
     start_enabled = false, -- enable transitions when mpv starts without having to enable them in the menu
@@ -89,6 +90,7 @@ local timers = {
     start_transition = new_timer(),
     end_transition = new_timer(),
     pause_on_end = new_timer(),
+    sub_visitor = new_timer(),
 }
 
 local function start_transition()
@@ -130,6 +132,8 @@ local function check_sub()
                 timers.start_transition.set(speedup_start, start_transition)
                 timers.end_transition.set(speedup_end, end_transition)
             end
+        elseif mp.get_property("sid") ~= "no" then
+            timers.sub_visitor.set(current_pos + revisit_delay, check_sub)
         end
     else
         reset_transition()
