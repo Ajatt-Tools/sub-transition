@@ -5,6 +5,9 @@ is used to increase the density of immersion.
 It speeds up the video when there's no subtitles.
 
 For the script to work it is necessary to have an active subtitle track.
+If there's no active subtitle track,
+or the next subtitle line hasn't been demuxed yet,
+the script does nothing.
 
 ## Installation
 
