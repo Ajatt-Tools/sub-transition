@@ -119,11 +119,11 @@ local function reset_transition()
     end_transition()
 end
 
-local function check_sub(_, sub)
-    if is_empty(sub) then
-        local current_pos = mp.get_property_native("time-pos")
+local function check_sub()
+    if is_empty(mp.get_property_native("sub-end")) then
+        local current_pos = mp.get_property_number("time-pos", 0)
         local delay_to_next_sub = get_delay_to_next_sub()
-        if current_pos and delay_to_next_sub then
+        if delay_to_next_sub then
             local speedup_start = current_pos + config.start_delay
             local speedup_end = current_pos + delay_to_next_sub - config.reset_before
             if speedup_end - speedup_start >= config.min_duration then
@@ -148,7 +148,7 @@ local transitions = (function()
     local enabled = false
     local function toggle()
         if not enabled then
-            mp.observe_property("sub-text", "string", check_sub)
+            mp.observe_property("sub-end", "number", check_sub)
             com.notify { message = "Transitions enabled.", osd = config.notifications, }
         else
             mp.unobserve_property(check_sub)
