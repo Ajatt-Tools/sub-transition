@@ -74,7 +74,11 @@ local function get_delay_to_next_sub()
     local next_sub_delay = mp.get_property_native("sub-delay") or 0
     mp.set_property_number("sub-delay", initial_sub_delay)
     mp.set_property_bool("sub-visibility", initial_sub_visibility)
-    return initial_sub_delay - next_sub_delay
+    if initial_sub_delay > next_sub_delay then
+        return initial_sub_delay - next_sub_delay
+    else
+        return nil
+    end
 end
 
 local function get_padded_sub_end()
