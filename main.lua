@@ -11,6 +11,8 @@ local com = require('common')
 local OSD = require('osd_styler')
 local Menu = require('menu')
 local default_sync_property = mp.get_property("video-sync", "audio")
+local default_readahead_secs = mp.get_property_number("demuxer-readahead-secs", 0)
+local recommended_readahead_secs = 120
 local end_ahead = 0.05
 
 local config = {
@@ -263,7 +265,12 @@ local main = (function()
         if not init_done then
             mpopt.read_options(config, NAME)
             mp.add_key_binding("shift+n", NAME .. '_menu_open', function() menu:open() end)
-            if config.start_enabled then transitions.toggle() end
+            if config.start_enabled then
+                transitions.toggle()
+            end
+            if default_readahead_secs < recommended_readahead_secs then
+                mp.set_property("demuxer-readahead-secs", recommended_readahead_secs)
+            end
             init_done = true
         else
             reset_transition()
