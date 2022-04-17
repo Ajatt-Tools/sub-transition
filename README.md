@@ -23,6 +23,8 @@ $ git clone 'https://github.com/Ajatt-Tools/sub_transition.git' ~/.config/mpv/sc
 
 To open the menu, press `shift+n`.
 
+![screenshot](https://user-images.githubusercontent.com/69171671/163695143-f5a4a5f3-98a6-4b13-8820-efb4d4f91304.png)
+
 ### Change settings
 
 Use Vim keys to navigate the menu.
