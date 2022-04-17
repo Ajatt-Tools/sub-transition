@@ -51,3 +51,5 @@ You can also use arrow keys if your keyboard has them.
 * `normal speed` - reset back to this speed when a new subtitle starts
 * `inter speed`- speed during speedup
 * `menu font size` - font size of the menu
+* `pause on start` - pause when a subtitle starts
+* `pause before end` - pause before a subtitle ends
