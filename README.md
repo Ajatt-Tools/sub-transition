@@ -19,6 +19,9 @@ Install in one line:
 $ git clone 'https://github.com/Ajatt-Tools/sub_transition.git' ~/.config/mpv/scripts/sub_transition
 ```
 
+Or manually download the folder and save it to `~/.config/mpv/scripts/`.
+The location may differ depending on the operating system or if you use a custom fork of mpv.
+
 ## Menu
 
 To open the menu, press `shift+n`.
