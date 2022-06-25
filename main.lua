@@ -162,7 +162,7 @@ local transitions = (function()
         enabled = not enabled
     end
     local function status()
-        return enabled and 'enabed' or 'disabled'
+        return enabled and 'enabled' or 'disabled'
     end
     return {
         toggle = toggle,
