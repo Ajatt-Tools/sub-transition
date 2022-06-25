@@ -54,7 +54,7 @@ local function new_timer()
     end
 
     check_stop = function(_, time)
-        if time >= end_time_pos then
+        if time ~= nil and time >= end_time_pos then
             cancel()
             on_end_fn()
         end
@@ -285,6 +285,7 @@ local main = (function()
             init_done = true
         else
             reset_transition()
+            check_sub()
         end
     end
     return fn
