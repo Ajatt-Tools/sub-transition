@@ -16,7 +16,7 @@ The installation process is no different from other mpv scripts.
 Install in one line:
 
 ```
-$ git clone 'https://github.com/Ajatt-Tools/sub_transition.git' ~/.config/mpv/scripts/sub_transition
+$ git clone 'https://github.com/Ajatt-Tools/sub-transition.git' ~/.config/mpv/scripts/sub_transition
 ```
 
 Or manually download the folder and save it to `~/.config/mpv/scripts/`.
