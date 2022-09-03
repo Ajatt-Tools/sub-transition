@@ -9,7 +9,7 @@ local self = {}
 
 self.on_pause_change = function(_, is_paused)
     if self.config.hide_subs_when_playing then
-        mp.set_property("sub-visibility", is_paused == true and "yes" or "no")
+        mp.set_property_bool("sub-visibility", is_paused)
     end
 end
 
