@@ -56,3 +56,4 @@ You can also use arrow keys if your keyboard has them.
 * `menu font size` - font size of the menu
 * `pause on start` - pause when a subtitle starts
 * `pause before end` - pause before a subtitle ends
+* `hide_subs_when_playing` - hide subtitles when playback is active
