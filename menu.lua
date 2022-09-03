@@ -4,7 +4,7 @@ License: GNU GPL, version 3 or later; https://www.gnu.org/licenses/gpl-3.0.html
 ]]
 
 local mp = require('mp')
-local com = require('common')
+local h = require('helpers')
 
 local Menu = {
     active = false,
@@ -21,7 +21,7 @@ end
 
 function Menu:with_update(params)
     return function()
-        pcall(com.unpack(params))
+        pcall(h.unpack(params))
         self:update()
     end
 end
@@ -38,7 +38,7 @@ end
 
 function Menu:open()
     if self.overlay == nil then
-        com.notify("OSD overlay is not supported in " .. mp.get_property("mpv-version"), "error", 5)
+        h.notify("OSD overlay is not supported in " .. mp.get_property("mpv-version"), "error", 5)
         return
     end
 
