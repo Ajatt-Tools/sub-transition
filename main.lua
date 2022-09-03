@@ -12,17 +12,18 @@ local com = require('helpers')
 local OSD = require('osd_styler')
 local Menu = require('menu')
 local transitions = require('transitions')
+local hide_subs = require('hide_subs')
 
 -- Consts
 local default_readahead_secs = mp.get_property_number("demuxer-readahead-secs", 0)
 local recommended_readahead_secs = 120
-
 
 local config = {
     start_enabled = false, -- enable transitions when mpv starts without having to enable them in the menu
     notifications = true, -- enable notifications when speed changes
     pause_on_start = false, -- pause when a subtitle starts
     pause_before_end = false, -- pause before a subtitle ends
+    hide_subs_when_playing = false, -- hide subtitles when playback is active
     start_delay = 0.1, -- if the next subtitle appears after this threshold then speedup
     reset_before = 0.3, --seconds to stop short of the next subtitle
     min_duration = 0.4, -- minimum duration of a skip
@@ -142,6 +143,7 @@ local main = (function()
             mpopt.read_options(config, NAME)
             mp.add_key_binding("shift+n", NAME .. '_menu_open', function() menu:open() end)
             transitions.init(config)
+            hide_subs.init(config)
             if config.start_enabled then
                 transitions.toggle()
             end
