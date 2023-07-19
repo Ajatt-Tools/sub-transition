@@ -24,4 +24,8 @@ self.is_empty = function(var)
     return var == nil or var == '' or (type(var) == 'table' and next(var) == nil)
 end
 
+self.is_non_dialogue = function(sub_line_text)
+    return not not (sub_line_text:match('^%b()$') or sub_line_text:match('^（.-）$') or sub_line_text:match('^♬～$'))
+end
+
 return self

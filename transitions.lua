@@ -72,8 +72,13 @@ local function pause_playback()
     h.notify { message = "Paused.", osd = self.config.notifications, }
 end
 
+local function should_fast_forward()
+    return h.is_empty(mp.get_property_native("sub-end"))
+            or (self.config.skip_non_dialogue and h.is_non_dialogue(mp.get_property("sub-text")))
+end
+
 local function check_sub()
-    if h.is_empty(mp.get_property_native("sub-end")) then
+    if should_fast_forward() then
         local current_pos = mp.get_property_number("time-pos", 0)
         local delay_to_next_sub = get_delay_to_next_sub()
         if delay_to_next_sub then
