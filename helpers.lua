@@ -33,6 +33,9 @@ local non_dialogue = {
 }
 
 self.is_non_dialogue = function(sub_line_text)
+    if self.is_empty(sub_line_text) then
+        return true
+    end
     for _, test_str in pairs(non_dialogue) do
         if sub_line_text:match(test_str) then
             return true
