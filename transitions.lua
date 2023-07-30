@@ -62,10 +62,11 @@ local function get_delay_to_next_sub()
     mp.set_property_bool("sub-visibility", false)
     mp.commandv("no-osd", "sub-step", 1)
     local next_sub_delay = mp.get_property_native("sub-delay") or 0
+    local next_sub_text = mp.get_property("sub-text") or ""
     mp.set_property_number("sub-delay", initial_sub_delay)
     mp.set_property_bool("sub-visibility", initial_sub_visibility)
     if initial_sub_delay > next_sub_delay then
-        return initial_sub_delay - next_sub_delay
+        return (initial_sub_delay - next_sub_delay), next_sub_text
     else
         return nil
     end
@@ -83,13 +84,15 @@ end
 local function check_sub()
     if should_fast_forward() then
         local current_pos = mp.get_property_number("time-pos", 0)
-        local delay_to_next_sub = get_delay_to_next_sub()
+        local delay_to_next_sub, next_sub_text = get_delay_to_next_sub()
         if delay_to_next_sub then
             local speedup_start = current_pos + self.config.start_delay
             local speedup_end = current_pos + delay_to_next_sub - self.config.reset_before
             if speedup_end - speedup_start >= self.config.min_duration then
                 timers.start_transition.set(speedup_start, start_transition)
-                timers.end_transition.set(speedup_end, end_transition)
+                if not should_skip_dialogue(next_sub_text) then
+                    timers.end_transition.set(speedup_end, end_transition)
+                end
             end
         elseif mp.get_property("sid") ~= "no" then
             timers.sub_visitor.set(current_pos + revisit_delay, check_sub)
