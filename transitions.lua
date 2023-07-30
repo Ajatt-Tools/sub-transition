@@ -48,6 +48,14 @@ local function reset_transition()
     end_transition()
 end
 
+local function should_skip_dialogue(text)
+    return h.is_empty(text) or (self.config.skip_non_dialogue and h.is_non_dialogue(text))
+end
+
+local function should_fast_forward()
+    return h.is_empty(mp.get_property_native("sub-end")) or should_skip_dialogue(mp.get_property("sub-text"))
+end
+
 local function get_delay_to_next_sub()
     local initial_sub_visibility = mp.get_property_bool("sub-visibility")
     local initial_sub_delay = mp.get_property_native("sub-delay") or 0
@@ -70,11 +78,6 @@ end
 local function pause_playback()
     mp.set_property("pause", "yes")
     h.notify { message = "Paused.", osd = self.config.notifications, }
-end
-
-local function should_fast_forward()
-    return h.is_empty(mp.get_property_native("sub-end"))
-            or (self.config.skip_non_dialogue and h.is_non_dialogue(mp.get_property("sub-text")))
 end
 
 local function check_sub()
