@@ -4,6 +4,7 @@ License: GNU GPL, version 3 or later; https://www.gnu.org/licenses/gpl-3.0.html
 ]]
 
 local mp = require('mp')
+local small_duration = 0.015
 
 local function new_timer()
     local end_time_pos = -1
@@ -11,9 +12,14 @@ local function new_timer()
     local on_end_fn
 
     local set = function(end_time, on_end)
-        end_time_pos = end_time
-        on_end_fn = on_end
-        mp.observe_property("time-pos", "number", check_stop)
+        if end_time - mp.get_property_number("time-pos", 0) < small_duration then
+            on_end()
+        else
+            end_time_pos = end_time
+            on_end_fn = on_end
+            mp.observe_property("time-pos", "number", check_stop)
+        end
+
     end
 
     local cancel = function()
