@@ -30,7 +30,8 @@ local config = {
     normal_speed = 1, -- reset back to this speed
     inter_speed = 2.5, -- the value that "speed" is set to during speedup
     menu_font_size = 24, -- font size
-    skip_non_dialogue = true, -- skip lines that are enclosed in partheneses
+    skip_non_dialogue = true, -- skip lines that are enclosed in parentheses
+    skip_immediately = false, -- skip non-dialogue lines without transitioning
 }
 
 local function _(text)

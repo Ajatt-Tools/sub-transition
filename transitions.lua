@@ -81,6 +81,13 @@ local function pause_playback()
     h.notify { message = "Paused.", osd = self.config.notifications, }
 end
 
+local function skip_immediately(to_position)
+    -- don't transition, just immediately skip to the next subtitle line.
+    if not mp.get_property_bool("pause") then
+        mp.commandv("seek", to_position, "absolute+exact")
+    end
+end
+
 local function check_sub()
     if should_fast_forward() then
         local current_pos = mp.get_property_number("time-pos", 0)
@@ -89,9 +96,13 @@ local function check_sub()
             local speedup_start = current_pos + self.config.start_delay
             local speedup_end = current_pos + delay_to_next_sub - self.config.reset_before
             if speedup_end - speedup_start >= self.config.min_duration then
-                timers.start_transition.set(speedup_start, start_transition)
-                if not should_skip_dialogue(next_sub_text) then
-                    timers.end_transition.set(speedup_end, end_transition)
+                if self.config.skip_immediately then
+                    timers.start_transition.set(speedup_start, function() skip_immediately(speedup_end) end)
+                else
+                    timers.start_transition.set(speedup_start, start_transition)
+                    if not should_skip_dialogue(next_sub_text) then
+                        timers.end_transition.set(speedup_end, end_transition)
+                    end
                 end
             end
         elseif mp.get_property("sid") ~= "no" then
@@ -113,6 +124,7 @@ end
 local function toggle()
     if not self.enabled then
         mp.observe_property("sub-end", "number", check_sub)
+        mp.observe_property("sub-text", "string", check_sub)
         h.notify { message = "Transitions enabled.", osd = self.config.notifications, }
     else
         mp.unobserve_property(check_sub)
