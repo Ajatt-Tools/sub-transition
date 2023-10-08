@@ -14,6 +14,7 @@ local function new_timer()
     local set = function(end_time, on_end)
         if end_time - mp.get_property_number("time-pos", 0) < small_duration then
             on_end()
+            end_time_pos = -1
         else
             end_time_pos = end_time
             on_end_fn = on_end
