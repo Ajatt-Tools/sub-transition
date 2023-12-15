@@ -66,7 +66,7 @@ local menu = Menu:new { selected = 1 }
 
 menu.keybindings = {
     -- bindings
-    { key = 't', fn = menu:with_update { transitions.toggle } },
+    { key = 't', fn = menu:with_update { transitions.toggle_enabled } },
     { key = 's', fn = save_config },
     { key = 'ESC', fn = function() menu:close() end },
     { key = 'q', fn = function() menu:close() end },
@@ -143,11 +143,13 @@ local main = (function()
     local function fn()
         if not init_done then
             mpopt.read_options(config, NAME)
+            mp.add_key_binding("t", NAME .. '_transition_toggle_fast_forward', function() transitions:toggle_fast_forward() end)
+            mp.add_key_binding("r", NAME .. '_transition_skip_immediately', function() transitions:toggle_skip_immediately() end)
             mp.add_key_binding("shift+n", NAME .. '_menu_open', function() menu:open() end)
             transitions.init(config)
             hide_subs.init(config)
             if config.start_enabled then
-                transitions.toggle()
+                transitions.toggle_enabled()
             end
             if default_readahead_secs < recommended_readahead_secs then
                 mp.set_property("demuxer-readahead-secs", recommended_readahead_secs)
