@@ -39,6 +39,11 @@ Use Vim keys to navigate the menu.
 You can also use arrow keys if your keyboard has them.
 
 ### Key bindings
+* `t` toggles fast-forward transition on/off. If no subtitles are played, the player will speed up playback until the next subtitle starts. 
+* `r` toggles instant skip transitions. If no subtitles are played, the player will immediately skip until the beginning of the next subtitle.
+Note that only one transition mode can be active at a time (either fast-forward or instant skip).
+
+### Key bindings (with menu open) 
 
 * `Esc` or `q` closes the menu.
 * `t` toggles transitions.
