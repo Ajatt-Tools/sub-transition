@@ -27,10 +27,8 @@ end
 local non_dialogue = {
     '^%b()$',
     '^（.-）$',
-    '^♬～$',
-    '^♬〜$',
-    '^♪～$',
-    '^～♪$',
+    '^-?%[.-%]$',
+    '^[♪♬～〜]+$',
 }
 
 self.is_non_dialogue = function(sub_line_text)
