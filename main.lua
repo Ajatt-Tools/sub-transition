@@ -143,9 +143,12 @@ local main = (function()
     local function fn()
         if not init_done then
             mpopt.read_options(config, NAME)
-            mp.add_key_binding("t", NAME .. '_transition_toggle_fast_forward', function() transitions:toggle_fast_forward() end)
-            mp.add_key_binding("r", NAME .. '_transition_skip_immediately', function() transitions:toggle_skip_immediately() end)
-            mp.add_key_binding("shift+n", NAME .. '_menu_open', function() menu:open() end)
+
+            -- Global key bindings
+            mp.add_key_binding(nil, string.format("%s_toggle_fast_forward", NAME), function() transitions:toggle_fast_forward() end)
+            mp.add_key_binding(nil, string.format("%s_skip_immediately", NAME), function() transitions:toggle_skip_immediately() end)
+            mp.add_key_binding("shift+n", string.format("%s_menu_open", NAME), function() menu:open() end)
+
             transitions.init(config)
             hide_subs.init(config)
             if config.start_enabled then
