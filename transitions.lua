@@ -149,12 +149,10 @@ local function toggle_skip_immediately()
     local is_enabled = not self.config.skip_immediately
     toggle_enabled(is_enabled)
     self.config.skip_immediately = is_enabled
-
-    if is_enabled then
-        h.notify { message = "Transition skip enabled.", osd = self.config.skip_immediately, }
-    else
-        h.notify { message = "Transition skip disabled.", osd = self.config.skip_immediately, }
-    end
+    h.notify {
+        message = string.format("Transition skip %s.", (is_enabled and "enabled" or "disabled")),
+        osd = self.config.skip_immediately,
+    }
 end
 
 local function init(config)
