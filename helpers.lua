@@ -43,4 +43,15 @@ self.is_non_dialogue = function(sub_line_text)
     return false
 end
 
+self.combine_lists = function(...)
+    -- take many lists and output one list.
+    local output = {}
+    for _, list in ipairs({ ... }) do
+        for _, item in ipairs(list) do
+            table.insert(output, item)
+        end
+    end
+    return output
+end
+
 return self
