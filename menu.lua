@@ -1,9 +1,12 @@
 --[[
-Copyright: Ren Tatsumoto
-License: GNU GPL, version 3 or later; https://www.gnu.org/licenses/gpl-3.0.html
+Copyright: Ajatt-Tools and contributors; https://github.com/Ajatt-Tools
+License: GNU GPL, version 3 or later; http://www.gnu.org/licenses/gpl.html
+
+Menu for mpvacious
 ]]
 
 local mp = require('mp')
+local msg = require('mp.msg')
 local h = require('helpers')
 
 local Menu = {
@@ -20,8 +23,12 @@ function Menu:new(o)
 end
 
 function Menu:with_update(params)
-    return function()
-        pcall(h.unpack(params))
+    return function(...)
+        local to_call = h.combine_lists(params, { ... })
+        local status, error = pcall(h.unpack(to_call))
+        if not status then
+            msg['error'](error)
+        end
         self:update()
     end
 end
@@ -31,7 +38,9 @@ function Menu:make_osd()
 end
 
 function Menu:update()
-    if self.active == false then return end
+    if self.active == false then
+        return
+    end
     self.overlay.data = self:make_osd():get_text()
     self.overlay:update()
 end
