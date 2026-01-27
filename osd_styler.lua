@@ -1,6 +1,9 @@
 --[[
-Copyright: Ren Tatsumoto
-License: GNU GPL, version 3 or later; https://www.gnu.org/licenses/gpl-3.0.html
+Copyright: Ajatt-Tools and contributors; https://github.com/Ajatt-Tools
+License: GNU GPL, version 3 or later; http://www.gnu.org/licenses/gpl.html
+
+A helper class for styling OSD messages
+http://docs.aegisub.org/3.2/ASS_Tags/
 ]]
 
 local OSD = {}
@@ -27,6 +30,10 @@ function OSD:size(size)
     return self:append('{\\fs'):append(size):append('}')
 end
 
+function OSD:font(name)
+    return self:append('{\\fn'):append(name):append('}')
+end
+
 function OSD:align(number)
     return self:append('{\\an'):append(number):append('}')
 end
@@ -45,6 +52,10 @@ end
 
 function OSD:text(text)
     return self:append(text)
+end
+
+function OSD:new_layer()
+    return self:append('\n')
 end
 
 function OSD:bold(s)
